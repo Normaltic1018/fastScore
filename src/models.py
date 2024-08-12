@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, ARRAY
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy import event
 
@@ -20,7 +20,7 @@ class Team(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    members = Column(ARRAY(String), nullable=False)
+    members = Column(JSON, nullable=False)
     recent_score = Column(Integer, nullable=True)
 
     scores = relationship('Score', back_populates="team")
