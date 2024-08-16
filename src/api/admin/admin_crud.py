@@ -78,3 +78,10 @@ def get_current_admin(token: str = Depends(oauth2_scheme),
         if admin is None:
             raise create_aceess_token
         return admin
+    
+def change_password(db: Session, username: str, password: str):
+    admin = db.query(Admin).filter_by(username=username).first()
+
+    admin.password = get_hashedPassword(password)
+    db.add(admin)
+    db.commit()

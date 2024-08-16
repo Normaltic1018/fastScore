@@ -48,3 +48,8 @@ def team_update(_team_update: team_schema.TeamUpdate,
                             detail="등록되지 않은 팀입니다.")
     team_crud.update_team(db, db_team=db_team, team_update=_team_update)
     return _team_update
+
+@router.delete("/resetTeam", status_code=status.HTTP_204_NO_CONTENT, tags=["Team"])
+def team_reset(db: Session = Depends(get_db),
+                current_admin: Admin = Depends(get_current_admin)):
+    team_crud.reset_team(db)

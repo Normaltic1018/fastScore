@@ -26,3 +26,7 @@ def update_team(db: Session, db_team: Team, team_update: TeamUpdate):
     db_team.members = team_update.members
     db.add(db_team)
     db.commit()
+
+def reset_team(db: Session):
+    db.query(Team).delete()
+    db.commit()
