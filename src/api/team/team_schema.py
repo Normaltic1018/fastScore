@@ -1,6 +1,8 @@
 from pydantic import BaseModel, field_validator
 from typing import List
 
+from api.score.score_schema import Score
+
 # Team Column Info
 # id = Column(Integer, primary_key=True)
 # name = Column(String, nullable=False)
@@ -12,6 +14,7 @@ class Team(BaseModel):
     name: str
     members: List[str] = []
     recent_score: int | None = 0
+    scores: List[Score] = []
 
 class TeamCreate(BaseModel):
     name: str

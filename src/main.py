@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from api.team import team_router
+from api.score import score_router
 
 app = FastAPI()
 
@@ -19,3 +20,4 @@ app = FastAPI()
 # )
 
 app.include_router(team_router.router)
+app.include_router(score_router.router)
