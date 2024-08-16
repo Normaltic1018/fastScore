@@ -36,3 +36,10 @@ def update_recent_score(mapper, connection, target):
         where(team_table.c.id == target.team_id).
         values(recent_score=(team_table.c.recent_score + target.amount))
     )
+
+class Admin(Base):
+    __tablename__ = "admin"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
