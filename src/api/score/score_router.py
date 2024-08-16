@@ -7,6 +7,9 @@ from api.team import team_crud
 
 from typing import List
 
+from api.admin.admin_crud import get_current_admin
+from models import Admin
+
 router = APIRouter(
     prefix="/api/score",
 )
@@ -19,7 +22,8 @@ def score_list(db: Session = Depends(get_db)):
 
 @router.post("/addScore/{team_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["Score"])
 def score_create(team_id: int, _score_create: score_schema.ScoreCreate,
-                 db: Session = Depends(get_db)):
+                 db: Session = Depends(get_db),
+                 current_admin: Admin = Depends(get_current_admin)):
     team = team_crud.get_team(db, team_id=team_id)
     if not team:
         raise HTTPException(status_code=404, detail="Team not Found")
@@ -29,7 +33,8 @@ def score_create(team_id: int, _score_create: score_schema.ScoreCreate,
 @router.delete("/delete" , status_code=status.HTTP_202_ACCEPTED, 
                response_model=score_schema.Score, tags=["Score"])
 def score_delete(_score_delete: score_schema.ScoreDelete,
-                 db: Session = Depends(get_db)):
+                 db: Session = Depends(get_db),
+                 current_admin: Admin = Depends(get_current_admin)):
     db_score = score_crud.get_score(db, score_id=_score_delete.id)
 
     if not db_score:
@@ -39,5 +44,6 @@ def score_delete(_score_delete: score_schema.ScoreDelete,
     return _score_delete
 
 @router.delete("/resetScore", status_code=status.HTTP_204_NO_CONTENT, tags=["Score"])
-def score_reset(db: Session = Depends(get_db)):
+def score_reset(db: Session = Depends(get_db),
+                current_admin: Admin = Depends(get_current_admin)):
     score_crud.reset_score(db)

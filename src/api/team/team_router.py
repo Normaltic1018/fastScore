@@ -5,6 +5,9 @@ from sqlalchemy.orm import Session
 from database import get_db
 from api.team import team_schema, team_crud
 
+from api.admin.admin_crud import get_current_admin
+from models import Admin
+
 router = APIRouter(
     prefix="/api/team",
 )
@@ -20,13 +23,14 @@ def team_detail(team_id: int, db: Session = Depends(get_db)):
     return team
 
 @router.post("/create", response_model=team_schema.TeamCreate, status_code=status.HTTP_201_CREATED, tags=["Team"])
-def team_create(_team_create: team_schema.TeamCreate, db: Session = Depends(get_db)):
+def team_create(_team_create: team_schema.TeamCreate, db: Session = Depends(get_db), current_admin: Admin = Depends(get_current_admin)):
     team_crud.create_team(db, team_create=_team_create)
     return _team_create
 
 @router.delete("/delete", response_model=team_schema.TeamDelete, status_code=status.HTTP_202_ACCEPTED, tags=["Team"])
 def team_delete(_team_delete: team_schema.TeamDelete,
-                db: Session = Depends(get_db)):
+                db: Session = Depends(get_db),
+                current_admin: Admin = Depends(get_current_admin)):
     db_team = team_crud.get_team(db, team_id=_team_delete.team_id)
     if not db_team:
         raise HTTPException(status_code=400,
@@ -36,7 +40,8 @@ def team_delete(_team_delete: team_schema.TeamDelete,
 
 @router.put("/update", response_model=team_schema.TeamUpdate, status_code=status.HTTP_202_ACCEPTED, tags=["Team"])
 def team_update(_team_update: team_schema.TeamUpdate,
-                db: Session = Depends(get_db)):
+                db: Session = Depends(get_db),
+                current_admin: Admin = Depends(get_current_admin)):
     db_team = team_crud.get_team(db, team_id=_team_update.team_id)
     if not db_team:
         raise HTTPException(status_code=400,
